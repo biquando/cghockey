@@ -39,6 +39,7 @@ export class Assignment3 extends Scene {
             //        (Requirement 1)
             cylinder1: new defs.Capped_Cylinder(100,100),
             cylinder2: new defs.Capped_Cylinder(100,100),
+            puck: new defs.Rounded_Capped_Cylinder(100,100),
 
         };
 
@@ -94,9 +95,17 @@ export class Assignment3 extends Scene {
 
         let model_transform = Mat4.identity()
         model_transform=model_transform.times(Mat4.translation(3,5,7));
-        this.drawMallot(context,program_state,model_transform);
+        this.drawMallet(context,program_state,model_transform);
+        model_transform=model_transform.times(Mat4.translation(4,0,-0.2));
+        this.drawPuck(context,program_state,model_transform);
     }
-    drawMallot(context,program_state,m_transform){
+    drawPuck(context, program_state, p_transform){
+        const yellow = hex_color("#fac91a");
+        let model_transform=p_transform;
+        model_transform=model_transform.times(Mat4.scale(1.3,1.3,0.6));
+        this.shapes.puck.draw(context, program_state, model_transform, this.materials.test.override({color: yellow}));
+    }
+    drawMallet(context, program_state, m_transform){
         const yellow = hex_color("#fac91a");
         let model_transform=m_transform;
         model_transform=model_transform.times(Mat4.scale(2,2,1))
