@@ -4,6 +4,8 @@ const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene,
 } = tiny;
 
+import {Puck, Mallet} from './physics.js';
+
 class Cube extends Shape {
     constructor() {
         super("position", "normal",);
@@ -50,6 +52,14 @@ export class Assignment3 extends Scene {
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
+
+        // Initialize puck and mallets
+        // Parameters: radius, mass, position
+        this.mallet1 = new Mallet(2, 100, vec3(-5, 0, 0));
+        this.mallet2 = new Mallet(2, 100, vec3(5, 0, 0));
+        this.puck = new Puck(1.3, 1, vec3(0, 0.1, 0));
+
+        this.puck.velocity = vec3(5, 0, 0);
     }
 
     make_control_panel() {
@@ -81,19 +91,35 @@ export class Assignment3 extends Scene {
         /*=== OUR CODE STARTS HERE ===========================================*/
 
         // Draw mallet 1
-        model_transform = model_transform.times(Mat4.translation(-5, 0, 0));
+        model_transform = model_transform
+            .times(Mat4.translation(this.mallet1.position[0], this.mallet1.position[1], this.mallet1.position[2]));
         this.drawMallet(context, program_state, model_transform);
         model_transform = Mat4.identity();
 
         // Draw mallet 2
-        model_transform = model_transform.times(Mat4.translation(5, 0, 0));
+        model_transform = model_transform
+            .times(Mat4.translation(this.mallet2.position[0], this.mallet2.position[1], this.mallet2.position[2]));
         this.drawMallet(context, program_state, model_transform);
         model_transform = Mat4.identity();
 
         // Draw puck
-        model_transform = model_transform.times(Mat4.translation(0, 0, 0));
+        model_transform = model_transform
+            .times(Mat4.translation(this.puck.position[0], this.puck.position[1], this.puck.position[2]));
         this.drawPuck(context, program_state, model_transform);
         model_transform = Mat4.identity();
+
+        // Collision detection
+        if (this.puck.position.minus(this.mallet1.position).norm() < this.mallet1.radius + this.puck.radius) {
+            this.puck.elastic_collision(this.mallet1);
+        }
+        if (this.puck.position.minus(this.mallet2.position).norm() < this.mallet2.radius + this.puck.radius) {
+            this.puck.elastic_collision(this.mallet2);
+        }
+
+        // Update moving objects
+        this.mallet1.update(dt);
+        this.mallet2.update(dt);
+        this.puck.update(dt);
     }
 
     drawPuck(context, program_state, model_transform) {
