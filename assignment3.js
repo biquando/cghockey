@@ -35,10 +35,7 @@ export class Assignment3 extends Scene {
             torus2: new defs.Torus(3, 15),
             sphere: new defs.Subdivision_Sphere(4),
             circle: new defs.Regular_2D_Polygon(10, 15),
-            // TODO:  Fill in as many additional shape instances as needed in this key/value table.
-            //        (Requirement 1)
-            cylinder1: new defs.Capped_Cylinder(100,100),
-            cylinder2: new defs.Capped_Cylinder(100,100),
+            cylinder: new defs.Capped_Cylinder(100,100),
             puck: new defs.Rounded_Capped_Cylinder(100,100),
 
         };
@@ -50,8 +47,6 @@ export class Assignment3 extends Scene {
             test2: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
             ring: new Material(new Ring_Shader()),
-            // TODO:  Fill in as many additional material objects as needed in this key/value table.
-            //        (Requirement 4)
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -59,15 +54,8 @@ export class Assignment3 extends Scene {
 
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("View solar system", ["Control", "0"], () => this.attached = () => null);
+        this.key_triggered_button("Test button", ["Control", "0"], () => {console.log("Hello!")});
         this.new_line();
-        this.key_triggered_button("Attach to planet 1", ["Control", "1"], () => this.attached = () => this.planet_1);
-        this.key_triggered_button("Attach to planet 2", ["Control", "2"], () => this.attached = () => this.planet_2);
-        this.new_line();
-        this.key_triggered_button("Attach to planet 3", ["Control", "3"], () => this.attached = () => this.planet_3);
-        this.key_triggered_button("Attach to planet 4", ["Control", "4"], () => this.attached = () => this.planet_4);
-        this.new_line();
-        this.key_triggered_button("Attach to moon", ["Control", "m"], () => this.attached = () => this.moon);
     }
 
     display(context, program_state) {
@@ -82,41 +70,66 @@ export class Assignment3 extends Scene {
         program_state.projection_transform = Mat4.perspective(
             Math.PI / 4, context.width / context.height, .1, 1000);
 
-        // TODO: Create Planets (Requirement 1)
-        // this.shapes.[XXX].draw([XXX]) // <--example
-
-        // TODO: Lighting (Requirement 2)
+        // Lighting
         const light_position = vec4(0, 5, 5, 1);
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
-        // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 3 and 4)
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
+        let model_transform = Mat4.identity();
 
-        let model_transform = Mat4.identity()
-        model_transform=model_transform.times(Mat4.translation(3,5,7));
-        this.drawMallet(context,program_state,model_transform);
-        model_transform=model_transform.times(Mat4.translation(4,0,-0.2));
-        this.drawPuck(context,program_state,model_transform);
+        /*=== OUR CODE STARTS HERE ===========================================*/
+
+        // Draw mallet 1
+        model_transform = model_transform.times(Mat4.translation(-5, 0, 0));
+        this.drawMallet(context, program_state, model_transform);
+        model_transform = Mat4.identity();
+
+        // Draw mallet 2
+        model_transform = model_transform.times(Mat4.translation(5, 0, 0));
+        this.drawMallet(context, program_state, model_transform);
+        model_transform = Mat4.identity();
+
+        // Draw puck
+        model_transform = model_transform.times(Mat4.translation(0, 0, 0));
+        this.drawPuck(context, program_state, model_transform);
+        model_transform = Mat4.identity();
     }
-    drawPuck(context, program_state, p_transform){
-        const yellow = hex_color("#fac91a");
-        let model_transform=p_transform;
-        model_transform=model_transform.times(Mat4.scale(1.3,1.3,0.6));
-        this.shapes.puck.draw(context, program_state, model_transform, this.materials.test.override({color: yellow}));
+
+    drawPuck(context, program_state, model_transform) {
+        const PUCK_RADIUS = 1.3, PUCK_HEIGHT = 0.6;
+        const Z_OFFSET = PUCK_HEIGHT / 2; // Offset so the puck's bottom is at the origin
+                                          // This makes it easier to position the puck on the table
+        model_transform = model_transform
+            .times(Mat4.translation(0, 0, Z_OFFSET))
+            .times(Mat4.scale(PUCK_RADIUS, PUCK_RADIUS, PUCK_HEIGHT));
+        this.shapes.puck.draw(context, program_state, model_transform, this.materials.test);
     }
-    drawMallet(context, program_state, m_transform){
-        const yellow = hex_color("#fac91a");
-        let model_transform=m_transform;
-        model_transform=model_transform.times(Mat4.scale(2,2,1))
-        this.shapes.cylinder1.draw(context, program_state, model_transform, this.materials.test.override({color: yellow}));
-        let cylinder2_transform = m_transform;
-        cylinder2_transform=cylinder2_transform.times(Mat4.translation(0,0,1));
-        cylinder2_transform=cylinder2_transform.times(Mat4.scale(1,1,2));
-        this.shapes.cylinder2.draw(context, program_state, cylinder2_transform, this.materials.test.override({color: yellow}));
-        let sphere_transform = m_transform;
-        sphere_transform=sphere_transform.times(Mat4.translation(0,0,2))
-        this.shapes.sphere.draw(context, program_state, sphere_transform, this.materials.test.override({color: yellow}));
+
+    drawMallet(context, program_state, model_transform) {
+        // Draw base
+        const BASE_RADIUS = 2, BASE_HEIGHT = 1;
+        const Z_OFFSET = BASE_HEIGHT / 2; // Offset so the mallet's bottom is at the origin
+                                          // This makes it easier to position the mallet on the table
+        let base_transform = model_transform
+            .times(Mat4.translation(0, 0, Z_OFFSET))
+            .times(Mat4.scale(BASE_RADIUS, BASE_RADIUS, BASE_HEIGHT));
+        this.shapes.cylinder.draw(context, program_state, base_transform, this.materials.test);
+
+        // Draw stick shaft
+        const SHAFT_RADIUS = 1, SHAFT_HEIGHT = 1;
+        let shaft_transform = model_transform
+            .times(Mat4.translation(0, 0, Z_OFFSET))
+            .times(Mat4.translation(0, 0, BASE_HEIGHT/2 + SHAFT_HEIGHT/2)) // Move to top of base
+            .times(Mat4.scale(SHAFT_RADIUS, SHAFT_RADIUS, SHAFT_HEIGHT));
+        this.shapes.cylinder.draw(context, program_state, shaft_transform, this.materials.test);
+
+        // Draw stick head
+        let head_transform = model_transform
+            .times(Mat4.translation(0, 0, Z_OFFSET))
+            .times(Mat4.translation(0, 0, BASE_HEIGHT/2 + SHAFT_HEIGHT)) // Move to top of shaft
+            .times(Mat4.scale(SHAFT_RADIUS, SHAFT_RADIUS, SHAFT_RADIUS));
+        this.shapes.sphere.draw(context, program_state, head_transform, this.materials.test);
     }
 }
 
