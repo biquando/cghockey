@@ -6,7 +6,7 @@ const {
 
 class MovableObject {
     constructor(mass=1, position) {
-        this.position = position;
+        this.position = position.copy();
         this.velocity = Vector3.create(0, 0, 0);
         this.acceleration = Vector3.create(0, 0, 0);
         this.mass = mass;

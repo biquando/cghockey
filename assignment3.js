@@ -5,6 +5,7 @@ const {
 } = tiny;
 
 import {Puck, Mallet} from './physics.js';
+import {config} from './config.js';
 
 class Cube extends Shape {
     constructor() {
@@ -39,7 +40,6 @@ export class Assignment3 extends Scene {
             circle: new defs.Regular_2D_Polygon(10, 15),
             cylinder: new defs.Capped_Cylinder(100,100),
             puck: new defs.Rounded_Capped_Cylinder(100,100),
-
         };
 
         // *** Materials
@@ -55,10 +55,11 @@ export class Assignment3 extends Scene {
 
         // Initialize puck and mallets
         // Parameters: radius, mass, position
-        this.mallet1 = new Mallet(2, 100, vec3(-5, 0, 0));
-        this.mallet2 = new Mallet(2, 100, vec3(5, 0, 0));
-        this.puck = new Puck(1.3, 1, vec3(0, 0.1, 0));
+        this.puck = new Puck(config.PUCK_RADIUS, 1, config.PUCK_INIT_POS);
+        this.mallet1 = new Mallet(config.MALLET1_RADIUS, 100, config.MALLET1_INIT_POS);
+        this.mallet2 = new Mallet(config.MALLET2_RADIUS, 100, config.MALLET2_INIT_POS);
 
+        // Initial velocity to test collision
         this.puck.velocity = vec3(5, 0, 0);
     }
 
@@ -90,30 +91,42 @@ export class Assignment3 extends Scene {
 
         /*=== OUR CODE STARTS HERE ===========================================*/
 
+        // Draw puck
+        model_transform = model_transform
+            .times(Mat4.translation(this.puck.position[0], this.puck.position[1], this.puck.position[2]));
+        this.drawPuck(context, program_state, model_transform, this.puck.radius);
+        model_transform = Mat4.identity();
+
         // Draw mallet 1
         model_transform = model_transform
             .times(Mat4.translation(this.mallet1.position[0], this.mallet1.position[1], this.mallet1.position[2]));
-        this.drawMallet(context, program_state, model_transform);
+        this.drawMallet(context, program_state, model_transform, this.mallet1.radius);
         model_transform = Mat4.identity();
 
         // Draw mallet 2
         model_transform = model_transform
             .times(Mat4.translation(this.mallet2.position[0], this.mallet2.position[1], this.mallet2.position[2]));
-        this.drawMallet(context, program_state, model_transform);
+        this.drawMallet(context, program_state, model_transform, this.mallet2.radius);
         model_transform = Mat4.identity();
 
-        // Draw puck
-        model_transform = model_transform
-            .times(Mat4.translation(this.puck.position[0], this.puck.position[1], this.puck.position[2]));
-        this.drawPuck(context, program_state, model_transform);
-        model_transform = Mat4.identity();
-
-        // Collision detection
+        // Collision detection (this only affects the puck)
+        // puck and mallet1
         if (this.puck.position.minus(this.mallet1.position).norm() < this.mallet1.radius + this.puck.radius) {
-            this.puck.elastic_collision(this.mallet1);
+            if (!this.puckInsideMallet1) { // If the puck was not inside mallet 1 last frame
+                this.puckInsideMallet1 = true;
+                this.puck.elastic_collision(this.mallet1);
+            }
+        } else {
+            this.puckInsideMallet1 = false;
         }
+        // puck and mallet2
         if (this.puck.position.minus(this.mallet2.position).norm() < this.mallet2.radius + this.puck.radius) {
-            this.puck.elastic_collision(this.mallet2);
+            if (!this.puckInsideMallet2) { // If the puck was not inside mallet 2 last frame
+                this.puckInsideMallet2 = true;
+                this.puck.elastic_collision(this.mallet2);
+            }
+        } else {
+            this.puckInsideMallet2 = false;
         }
 
         // Update moving objects
@@ -122,8 +135,8 @@ export class Assignment3 extends Scene {
         this.puck.update(dt);
     }
 
-    drawPuck(context, program_state, model_transform) {
-        const PUCK_RADIUS = 1.3, PUCK_HEIGHT = 0.6;
+    drawPuck(context, program_state, model_transform, radius) {
+        const PUCK_RADIUS = radius, PUCK_HEIGHT = 0.6;
         const Z_OFFSET = PUCK_HEIGHT / 2; // Offset so the puck's bottom is at the origin
                                           // This makes it easier to position the puck on the table
         model_transform = model_transform
@@ -132,9 +145,9 @@ export class Assignment3 extends Scene {
         this.shapes.puck.draw(context, program_state, model_transform, this.materials.test);
     }
 
-    drawMallet(context, program_state, model_transform) {
+    drawMallet(context, program_state, model_transform, radius) {
         // Draw base
-        const BASE_RADIUS = 2, BASE_HEIGHT = 1;
+        const BASE_RADIUS = radius, BASE_HEIGHT = 1;
         const Z_OFFSET = BASE_HEIGHT / 2; // Offset so the mallet's bottom is at the origin
                                           // This makes it easier to position the mallet on the table
         let base_transform = model_transform
