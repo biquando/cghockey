@@ -15,8 +15,8 @@ export const config = {
 
     PUCK_ELASTICITY: 0.9,
 
-    MALLET1_SPEED: 15,
-    MALLET2_SPEED: 15,
+    MALLET1_SPEED: 20,
+    MALLET2_SPEED: 20,
 
     LOWER_BOUND: -20,
     UPPER_BOUND: 20,

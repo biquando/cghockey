@@ -47,4 +47,12 @@ export class Mallet extends MovableObject {
         super(...args);
         this.radius = radius;
     }
+
+    update(delta_time) {
+        super.update(delta_time);
+        this.position[0] = Math.max(config.LEFT_BOUND + this.radius,
+            Math.min(config.RIGHT_BOUND - this.radius, this.position[0]));
+        this.position[1] = Math.max(config.LOWER_BOUND + this.radius,
+            Math.min(config.UPPER_BOUND - this.radius, this.position[1]));
+    }
 }
