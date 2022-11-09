@@ -4,6 +4,8 @@ const {
     Vector3,
 } = tiny;
 
+import {config} from './config.js';
+
 class MovableObject {
     constructor(mass=1, position) {
         this.position = position.copy();
@@ -36,7 +38,7 @@ export class Puck extends MovableObject {
         const v1_prime = v1.minus(x1.minus(x2).times(2 * m2 / (m1 + m2)
             * v1.minus(v2).dot(x1.minus(x2)) / x1.minus(x2).norm()**2));
 
-        this.velocity = v1_prime;
+        this.velocity = v1_prime.times(config.PUCK_ELASTICITY);
     }
 }
 

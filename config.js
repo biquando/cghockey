@@ -13,6 +13,13 @@ export const config = {
     MALLET1_RADIUS: 2,
     MALLET2_RADIUS: 2,
 
-    MALLET1_SPEED: 10,
-    MALLET2_SPEED: 10,
+    PUCK_ELASTICITY: 0.9,
+
+    MALLET1_SPEED: 15,
+    MALLET2_SPEED: 15,
+
+    LOWER_BOUND: -20,
+    UPPER_BOUND: 20,
+    LEFT_BOUND: -30,
+    RIGHT_BOUND: 30,
 };

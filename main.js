@@ -148,6 +148,26 @@ export class Main extends Scene {
         } else {
             this.puckInsideMallet2 = false;
         }
+        // upper wall and lower wall
+        if (this.puck.position[1] + this.puck.radius > config.UPPER_BOUND
+            || this.puck.position[1] - this.puck.radius < config.LOWER_BOUND) {
+            if (!this.puckInsideVertWall) { // If the puck was not inside the wall last frame
+                this.puckInsideVertWall = true;
+                this.puck.velocity[1] = -this.puck.velocity[1];
+            }
+        } else {
+            this.puckInsideVertWall = false;
+        }
+        // left wall and right wall
+        if (this.puck.position[0] + this.puck.radius > config.RIGHT_BOUND
+            || this.puck.position[0] - this.puck.radius < config.LEFT_BOUND) {
+            if (!this.puckInsideHorizWall) { // If the puck was not inside the wall last frame
+                this.puckInsideHorizWall = true;
+                this.puck.velocity[0] = -this.puck.velocity[0];
+            }
+        } else {
+            this.puckInsideHorizWall = false;
+        }
 
         // Update moving objects
         this.mallet1.update(dt);
