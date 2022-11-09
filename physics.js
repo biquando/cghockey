@@ -46,9 +46,27 @@ export class Mallet extends MovableObject {
     constructor(radius, ...args) {
         super(...args);
         this.radius = radius;
+        this.movingUp = false;
+        this.movingDown = false;
+        this.movingLeft = false;
+        this.movingRight = false;
     }
 
     update(delta_time) {
+        // Update velocity based on user input
+        this.velocity = Vector3.create(0, 0, 0);
+        if (this.movingUp) {
+            this.velocity[1] += config.MALLET1_SPEED;
+        }
+        if (this.movingDown) {
+            this.velocity[1] -= config.MALLET1_SPEED;
+        }
+        if (this.movingLeft) {
+            this.velocity[0] -= config.MALLET1_SPEED;
+        }
+        if (this.movingRight) {
+            this.velocity[0] += config.MALLET1_SPEED;
+        }
         super.update(delta_time);
 
         // Bound the mallet to the table

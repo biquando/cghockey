@@ -71,26 +71,26 @@ export class Main extends Scene {
         const COLOR = "#6E6460";
 
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("Up", ["y"], () => {this.mallet1.velocity[1] = config.MALLET1_SPEED},
-            COLOR, () => {this.mallet1.velocity[1] = 0});
+        this.key_triggered_button("Up", ["y"], () => {this.mallet1.movingUp = true;},
+            COLOR, () => {this.mallet1.movingUp = false;});
         this.new_line();
-        this.key_triggered_button("Left", ["g"], () => {this.mallet1.velocity[0] = -config.MALLET1_SPEED},
-            COLOR, () => {this.mallet1.velocity[0] = 0});
-        this.key_triggered_button("Down", ["h"], () => {this.mallet1.velocity[1] = -config.MALLET1_SPEED},
-            COLOR, () => {this.mallet1.velocity[1] = 0});
-        this.key_triggered_button("Right", ["j"], () => {this.mallet1.velocity[0] = config.MALLET1_SPEED},
-            COLOR, () => {this.mallet1.velocity[0] = 0});
+        this.key_triggered_button("Left", ["g"], () => {this.mallet1.movingLeft = true;},
+            COLOR, () => {this.mallet1.movingLeft = false;});
+        this.key_triggered_button("Down", ["h"], () => {this.mallet1.movingDown = true;},
+            COLOR, () => {this.mallet1.movingDown = false;});
+        this.key_triggered_button("Right", ["j"], () => {this.mallet1.movingRight = true;},
+            COLOR, () => {this.mallet1.movingRight = false;});
         this.new_line();
         this.new_line();
-        this.key_triggered_button("Up", ["ArrowUp"], () => {this.mallet2.velocity[1] = config.MALLET2_SPEED},
-            COLOR, () => {this.mallet2.velocity[1] = 0});
+        this.key_triggered_button("Up", ["ArrowUp"], () => {this.mallet2.movingUp = true;},
+            COLOR, () => {this.mallet2.movingUp = false;});
         this.new_line();
-        this.key_triggered_button("Left", ["ArrowLeft"], () => {this.mallet2.velocity[0] = -config.MALLET2_SPEED},
-            COLOR, () => {this.mallet2.velocity[0] = 0});
-        this.key_triggered_button("Down", ["ArrowDown"], () => {this.mallet2.velocity[1] = -config.MALLET2_SPEED},
-            COLOR, () => {this.mallet2.velocity[1] = 0});
-        this.key_triggered_button("Right", ["ArrowRight"], () => {this.mallet2.velocity[0] = config.MALLET2_SPEED},
-            COLOR, () => {this.mallet2.velocity[0] = 0});
+        this.key_triggered_button("Left", ["ArrowLeft"], () => {this.mallet2.movingLeft = true;},
+            COLOR, () => {this.mallet2.movingLeft = false;});
+        this.key_triggered_button("Down", ["ArrowDown"], () => {this.mallet2.movingDown = true;},
+            COLOR, () => {this.mallet2.movingDown = false;});
+        this.key_triggered_button("Right", ["ArrowRight"], () => {this.mallet2.movingRight = true;},
+            COLOR, () => {this.mallet2.movingRight = false});
     }
 
     display(context, program_state) {
