@@ -56,16 +56,16 @@ export class Mallet extends MovableObject {
         // Update velocity based on user input
         this.velocity = Vector3.create(0, 0, 0);
         if (this.movingUp) {
-            this.velocity[1] += config.MALLET1_SPEED;
+            this.velocity[1] += config.MALLET_SPEED;
         }
         if (this.movingDown) {
-            this.velocity[1] -= config.MALLET1_SPEED;
+            this.velocity[1] -= config.MALLET_SPEED;
         }
         if (this.movingLeft) {
-            this.velocity[0] -= config.MALLET1_SPEED;
+            this.velocity[0] -= config.MALLET_SPEED;
         }
         if (this.movingRight) {
-            this.velocity[0] += config.MALLET1_SPEED;
+            this.velocity[0] += config.MALLET_SPEED;
         }
         super.update(delta_time);
 
