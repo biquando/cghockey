@@ -55,7 +55,7 @@ export class Main extends Scene {
 
         // Initialize puck and mallets
         // Parameters: radius, mass, position
-        this.puck = new Puck(config.PUCK_RADIUS, 1, config.PUCK_INIT_POS);
+        this.puck    = new Puck  (config.PUCK_RADIUS,      1, config.PUCK_INIT_POS);
         this.mallet1 = new Mallet(config.MALLET1_RADIUS, 100, config.MALLET1_INIT_POS);
         this.mallet2 = new Mallet(config.MALLET2_RADIUS, 100, config.MALLET2_INIT_POS);
 
@@ -64,9 +64,29 @@ export class Main extends Scene {
     }
 
     make_control_panel() {
+        const COLOR = "#6E6460";
+
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("Test button", ["Control", "0"], () => {console.log("Hello!")});
+        this.key_triggered_button("Up", ["y"], () => {this.mallet1.velocity[1] = config.MALLET1_SPEED},
+            COLOR, () => {this.mallet1.velocity[1] = 0});
         this.new_line();
+        this.key_triggered_button("Left", ["g"], () => {this.mallet1.velocity[0] = -config.MALLET1_SPEED},
+            COLOR, () => {this.mallet1.velocity[0] = 0});
+        this.key_triggered_button("Down", ["h"], () => {this.mallet1.velocity[1] = -config.MALLET1_SPEED},
+            COLOR, () => {this.mallet1.velocity[1] = 0});
+        this.key_triggered_button("Right", ["j"], () => {this.mallet1.velocity[0] = config.MALLET1_SPEED},
+            COLOR, () => {this.mallet1.velocity[0] = 0});
+        this.new_line();
+        this.new_line();
+        this.key_triggered_button("Up", ["ArrowUp"], () => {this.mallet2.velocity[1] = config.MALLET2_SPEED},
+            COLOR, () => {this.mallet2.velocity[1] = 0});
+        this.new_line();
+        this.key_triggered_button("Left", ["ArrowLeft"], () => {this.mallet2.velocity[0] = -config.MALLET2_SPEED},
+            COLOR, () => {this.mallet2.velocity[0] = 0});
+        this.key_triggered_button("Down", ["ArrowDown"], () => {this.mallet2.velocity[1] = -config.MALLET2_SPEED},
+            COLOR, () => {this.mallet2.velocity[1] = 0});
+        this.key_triggered_button("Right", ["ArrowRight"], () => {this.mallet2.velocity[0] = config.MALLET2_SPEED},
+            COLOR, () => {this.mallet2.velocity[0] = 0});
     }
 
     display(context, program_state) {
