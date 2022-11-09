@@ -22,4 +22,6 @@ export const config = {
     UPPER_BOUND: 20,
     LEFT_BOUND: -30,
     RIGHT_BOUND: 30,
+
+    CENTER_LINE: 0,
 };

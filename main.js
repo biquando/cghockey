@@ -61,6 +61,10 @@ export class Main extends Scene {
 
         // Initial velocity to test collision
         this.puck.velocity = vec3(5, 0, 0);
+
+        // Don't let the mallets cross the center line
+        this.mallet1.rightBound = config.CENTER_LINE;
+        this.mallet2.leftBound = config.CENTER_LINE;
     }
 
     make_control_panel() {
@@ -111,6 +115,7 @@ export class Main extends Scene {
 
         /*=== OUR CODE STARTS HERE ===========================================*/
 
+        /*=== Draw models ====================================================*/
         // Draw puck
         model_transform = model_transform
             .times(Mat4.translation(this.puck.position[0], this.puck.position[1], this.puck.position[2]));
@@ -129,7 +134,7 @@ export class Main extends Scene {
         this.drawMallet(context, program_state, model_transform, this.mallet2.radius);
         model_transform = Mat4.identity();
 
-        // Collision detection (this only affects the puck)
+        /*=== Collision detection (this only affects the puck) ===============*/
         // puck and mallet1
         if (this.puck.position.minus(this.mallet1.position).norm() < this.mallet1.radius + this.puck.radius) {
             if (!this.puckInsideMallet1) { // If the puck was not inside mallet 1 last frame

@@ -50,9 +50,20 @@ export class Mallet extends MovableObject {
 
     update(delta_time) {
         super.update(delta_time);
+
+        // Bound the mallet to the table
         this.position[0] = Math.max(config.LEFT_BOUND + this.radius,
             Math.min(config.RIGHT_BOUND - this.radius, this.position[0]));
         this.position[1] = Math.max(config.LOWER_BOUND + this.radius,
             Math.min(config.UPPER_BOUND - this.radius, this.position[1]));
+
+        // Don't let the mallet cross specific left/right bounds
+        console.log(this.leftBound);
+        if (this.leftBound !== undefined) {
+            this.position[0] = Math.max(this.leftBound + this.radius, this.position[0]);
+        }
+        if (this.rightBound !== undefined) {
+            this.position[0] = Math.min(this.rightBound - this.radius, this.position[0]);
+        }
     }
 }
