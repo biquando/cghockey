@@ -76,25 +76,25 @@ export class Main extends Scene {
         const BUTTON_COLOR = "#6E6460";
 
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("Up", ["y"], () => {this.mallet1.movingUp = true;},
+        this.key_triggered_button("P1 Up", ["w"], () => {this.mallet1.movingUp = true;},
             BUTTON_COLOR, () => {this.mallet1.movingUp = false;});
         this.new_line();
-        this.key_triggered_button("Left", ["g"], () => {this.mallet1.movingLeft = true;},
+        this.key_triggered_button("P1 Left", ["a"], () => {this.mallet1.movingLeft = true;},
             BUTTON_COLOR, () => {this.mallet1.movingLeft = false;});
-        this.key_triggered_button("Down", ["h"], () => {this.mallet1.movingDown = true;},
+        this.key_triggered_button("P1 Down", ["s"], () => {this.mallet1.movingDown = true;},
             BUTTON_COLOR, () => {this.mallet1.movingDown = false;});
-        this.key_triggered_button("Right", ["j"], () => {this.mallet1.movingRight = true;},
+        this.key_triggered_button("P1 Right", ["d"], () => {this.mallet1.movingRight = true;},
             BUTTON_COLOR, () => {this.mallet1.movingRight = false;});
         this.new_line();
         this.new_line();
-        this.key_triggered_button("Up", ["ArrowUp"], () => {this.mallet2.movingUp = true;},
+        this.key_triggered_button("P2 Up", ["ArrowUp"], () => {this.mallet2.movingUp = true;},
             BUTTON_COLOR, () => {this.mallet2.movingUp = false;});
         this.new_line();
-        this.key_triggered_button("Left", ["ArrowLeft"], () => {this.mallet2.movingLeft = true;},
+        this.key_triggered_button("P2 Left", ["ArrowLeft"], () => {this.mallet2.movingLeft = true;},
             BUTTON_COLOR, () => {this.mallet2.movingLeft = false;});
-        this.key_triggered_button("Down", ["ArrowDown"], () => {this.mallet2.movingDown = true;},
+        this.key_triggered_button("P2 Down", ["ArrowDown"], () => {this.mallet2.movingDown = true;},
             BUTTON_COLOR, () => {this.mallet2.movingDown = false;});
-        this.key_triggered_button("Right", ["ArrowRight"], () => {this.mallet2.movingRight = true;},
+        this.key_triggered_button("P2 Right", ["ArrowRight"], () => {this.mallet2.movingRight = true;},
             BUTTON_COLOR, () => {this.mallet2.movingRight = false});
     }
 
