@@ -76,7 +76,6 @@ export class Mallet extends MovableObject {
             Math.min(config.UPPER_BOUND - this.radius, this.position[1]));
 
         // Don't let the mallet cross specific left/right bounds
-        console.log(this.leftBound);
         if (this.leftBound !== undefined) {
             this.position[0] = Math.max(this.leftBound + this.radius, this.position[0]);
         }

@@ -53,6 +53,9 @@ export class Main extends Scene {
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
 
+
+        /*=== OUR CODE STARTS HERE ===========================================*/
+
         // Initialize puck and mallets
         // Parameters: radius, mass, position
         this.puck    = new Puck  (config.PUCK_RADIUS,      1, config.PUCK_INIT_POS);
@@ -68,29 +71,29 @@ export class Main extends Scene {
     }
 
     make_control_panel() {
-        const COLOR = "#6E6460";
+        const BUTTON_COLOR = "#6E6460";
 
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
         this.key_triggered_button("Up", ["y"], () => {this.mallet1.movingUp = true;},
-            COLOR, () => {this.mallet1.movingUp = false;});
+            BUTTON_COLOR, () => {this.mallet1.movingUp = false;});
         this.new_line();
         this.key_triggered_button("Left", ["g"], () => {this.mallet1.movingLeft = true;},
-            COLOR, () => {this.mallet1.movingLeft = false;});
+            BUTTON_COLOR, () => {this.mallet1.movingLeft = false;});
         this.key_triggered_button("Down", ["h"], () => {this.mallet1.movingDown = true;},
-            COLOR, () => {this.mallet1.movingDown = false;});
+            BUTTON_COLOR, () => {this.mallet1.movingDown = false;});
         this.key_triggered_button("Right", ["j"], () => {this.mallet1.movingRight = true;},
-            COLOR, () => {this.mallet1.movingRight = false;});
+            BUTTON_COLOR, () => {this.mallet1.movingRight = false;});
         this.new_line();
         this.new_line();
         this.key_triggered_button("Up", ["ArrowUp"], () => {this.mallet2.movingUp = true;},
-            COLOR, () => {this.mallet2.movingUp = false;});
+            BUTTON_COLOR, () => {this.mallet2.movingUp = false;});
         this.new_line();
         this.key_triggered_button("Left", ["ArrowLeft"], () => {this.mallet2.movingLeft = true;},
-            COLOR, () => {this.mallet2.movingLeft = false;});
+            BUTTON_COLOR, () => {this.mallet2.movingLeft = false;});
         this.key_triggered_button("Down", ["ArrowDown"], () => {this.mallet2.movingDown = true;},
-            COLOR, () => {this.mallet2.movingDown = false;});
+            BUTTON_COLOR, () => {this.mallet2.movingDown = false;});
         this.key_triggered_button("Right", ["ArrowRight"], () => {this.mallet2.movingRight = true;},
-            COLOR, () => {this.mallet2.movingRight = false});
+            BUTTON_COLOR, () => {this.mallet2.movingRight = false});
     }
 
     display(context, program_state) {
@@ -112,6 +115,7 @@ export class Main extends Scene {
 
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.identity();
+
 
         /*=== OUR CODE STARTS HERE ===========================================*/
 
@@ -174,7 +178,7 @@ export class Main extends Scene {
             this.puckInsideHorizWall = false;
         }
 
-        // Update moving objects
+        /*=== Update moving objects ==========================================*/
         this.mallet1.update(dt);
         this.mallet2.update(dt);
         this.puck.update(dt);
