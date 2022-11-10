@@ -51,16 +51,16 @@ export class Main extends Scene {
             ring: new Material(new Ring_Shader()),
         }
 
-        this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
+        this.initial_camera_location = Mat4.look_at(vec3(0, -5, 200), vec3(0, 0, 0), vec3(0, 1, 0));
 
 
         /*=== OUR CODE STARTS HERE ===========================================*/
 
         // Initialize puck and mallets
         // Parameters: radius, mass, position
-        this.puck    = new Puck  (config.PUCK_RADIUS,      1, config.PUCK_INIT_POS);
-        this.mallet1 = new Mallet(config.MALLET1_RADIUS, 100, config.MALLET1_INIT_POS);
-        this.mallet2 = new Mallet(config.MALLET2_RADIUS, 100, config.MALLET2_INIT_POS);
+        this.puck    = new Puck  (config.PUCK_RADIUS,       config.PUCK_MASS, config.PUCK_INIT_POS);
+        this.mallet1 = new Mallet(config.MALLET1_RADIUS, config.MALLET1_MASS, config.MALLET1_INIT_POS);
+        this.mallet2 = new Mallet(config.MALLET2_RADIUS, config.MALLET2_MASS, config.MALLET2_INIT_POS);
 
         // Initial velocity to test collision
         this.puck.velocity = vec3(5, 0, 0);
@@ -185,7 +185,7 @@ export class Main extends Scene {
     }
 
     drawPuck(context, program_state, model_transform, radius) {
-        const PUCK_RADIUS = radius, PUCK_HEIGHT = 0.6;
+        const PUCK_RADIUS = radius, PUCK_HEIGHT = 1;
         const Z_OFFSET = PUCK_HEIGHT / 2; // Offset so the puck's bottom is at the origin
                                           // This makes it easier to position the puck on the table
         model_transform = model_transform
@@ -196,7 +196,7 @@ export class Main extends Scene {
 
     drawMallet(context, program_state, model_transform, radius) {
         // Draw base
-        const BASE_RADIUS = radius, BASE_HEIGHT = 1;
+        const BASE_RADIUS = radius, BASE_HEIGHT = 7;
         const Z_OFFSET = BASE_HEIGHT / 2; // Offset so the mallet's bottom is at the origin
                                           // This makes it easier to position the mallet on the table
         let base_transform = model_transform
@@ -205,7 +205,7 @@ export class Main extends Scene {
         this.shapes.cylinder.draw(context, program_state, base_transform, this.materials.test);
 
         // Draw stick shaft
-        const SHAFT_RADIUS = 1, SHAFT_HEIGHT = 1;
+        const SHAFT_RADIUS = 4, SHAFT_HEIGHT = 8;
         let shaft_transform = model_transform
             .times(Mat4.translation(0, 0, Z_OFFSET))
             .times(Mat4.translation(0, 0, BASE_HEIGHT/2 + SHAFT_HEIGHT/2)) // Move to top of base
