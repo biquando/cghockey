@@ -67,20 +67,23 @@ export class Mallet extends MovableObject {
         if (this.movingRight) {
             this.velocity[0] += config.MALLET_SPEED;
         }
-        super.update(delta_time);
-
-        // Bound the mallet to the table
-        this.position[0] = Math.max(config.LEFT_BOUND + this.radius,
-            Math.min(config.RIGHT_BOUND - this.radius, this.position[0]));
-        this.position[1] = Math.max(config.LOWER_BOUND + this.radius,
-            Math.min(config.UPPER_BOUND - this.radius, this.position[1]));
 
         // Don't let the mallet cross specific left/right bounds
-        if (this.leftBound !== undefined) {
-            this.position[0] = Math.max(this.leftBound + this.radius, this.position[0]);
+        if (this.leftBound !== undefined && this.position[0] <= this.leftBound + this.radius) {
+            this.velocity[0] = Math.max(0, this.velocity[0]);
         }
-        if (this.rightBound !== undefined) {
-            this.position[0] = Math.min(this.rightBound - this.radius, this.position[0]);
+        if (this.rightBound !== undefined && this.position[0] >= this.rightBound - this.radius) {
+            this.velocity[0] = Math.min(0, this.velocity[0]);
         }
+
+        // Bound the mallet to the table
+        if (this.position[0] <= config.LEFT_BOUND + this.radius) {
+            this.velocity[0] = Math.max(0, this.velocity[0]);
+        }
+        if (this.position[0] >= config.RIGHT_BOUND - this.radius) {
+            this.velocity[0] = Math.min(0, this.velocity[0]);
+        }
+
+        super.update(delta_time);
     }
 }
