@@ -14,6 +14,8 @@ export class Main extends Scene {
         // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
         super();
 
+        this.scoreL=0;
+        this.scoreR=0;
         // At the beginning of our program, load one of each of these shape definitions onto the GPU.
         this.shapes = {
             sphere: new defs.Subdivision_Sphere(4),
@@ -168,6 +170,15 @@ export class Main extends Scene {
         }
 
         /*=== Goal detection =================================================*/
+        if (this.puck.position[0] < (config.LEFT_BOUND - this.puck.radius)){
+            this.scoreR=this.scoreR+1;
+            console.log("Left Score"+this.scoreR)
+        }
+        if(this.puck.position[0] > (config.RIGHT_BOUND + this.puck.radius)){
+            this.scoreL=this.scoreL+1;
+            console.log("Right Score"+this.scoreL)
+        }
+
         if (this.puck.position[0] < (config.LEFT_BOUND - this.puck.radius)
             || this.puck.position[0] > (config.RIGHT_BOUND + this.puck.radius)) {
             console.log(config.PUCK_INIT_POS[0] + "," + config.PUCK_INIT_POS[1] + "," + config.PUCK_INIT_POS[2])
@@ -175,8 +186,6 @@ export class Main extends Scene {
             this.puck.velocity = vec3(0, 0, 0);
             this.mallet1.position = config.MALLET1_INIT_POS.copy();
             this.mallet2.position = config.MALLET2_INIT_POS.copy();
-
-            //TODO: Update score
 
         }
 
@@ -282,7 +291,6 @@ export class Main extends Scene {
 
 class Gouraud_Shader extends Shader {
     // This is a Shader using Phong_Shader as template
-    // TODO: Modify the glsl coder here to create a Gouraud Shader (Planet 2)
 
     constructor(num_lights = 2) {
         super();
