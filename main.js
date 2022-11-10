@@ -40,6 +40,8 @@ export class Main extends Scene {
             circle: new defs.Regular_2D_Polygon(10, 15),
             cylinder: new defs.Capped_Cylinder(100,100),
             puck: new defs.Rounded_Capped_Cylinder(100,100),
+            table: new defs.Cube(),
+            rail: new defs.Cube(),
         };
 
         // *** Materials
@@ -138,6 +140,13 @@ export class Main extends Scene {
         this.drawMallet(context, program_state, model_transform, this.mallet2.radius);
         model_transform = Mat4.identity();
 
+        // Draw table
+        model_transform = model_transform
+            .times(Mat4.translation(0, 0, -config.TABLE_HEIGHT / 2))
+            .times(Mat4.scale(config.RIGHT_BOUND + config.RAIL_WIDTH, config.UPPER_BOUND + config.RAIL_WIDTH, config.TABLE_HEIGHT / 2));
+        this.drawTable(context, program_state, model_transform);
+        model_transform = Mat4.identity();
+
         /*=== Collision detection (this only affects the puck) ===============*/
         // puck and mallet1
         if (this.puck.position.minus(this.mallet1.position).norm() < this.mallet1.radius + this.puck.radius) {
@@ -196,7 +205,7 @@ export class Main extends Scene {
 
     drawMallet(context, program_state, model_transform, radius) {
         // Draw base
-        const BASE_RADIUS = radius, BASE_HEIGHT = 7;
+        const BASE_RADIUS = radius, BASE_HEIGHT = 3;
         const Z_OFFSET = BASE_HEIGHT / 2; // Offset so the mallet's bottom is at the origin
                                           // This makes it easier to position the mallet on the table
         let base_transform = model_transform
@@ -205,7 +214,7 @@ export class Main extends Scene {
         this.shapes.cylinder.draw(context, program_state, base_transform, this.materials.test);
 
         // Draw stick shaft
-        const SHAFT_RADIUS = 4, SHAFT_HEIGHT = 8;
+        const SHAFT_RADIUS = BASE_RADIUS / 2, SHAFT_HEIGHT = 4;
         let shaft_transform = model_transform
             .times(Mat4.translation(0, 0, Z_OFFSET))
             .times(Mat4.translation(0, 0, BASE_HEIGHT/2 + SHAFT_HEIGHT/2)) // Move to top of base
@@ -218,6 +227,62 @@ export class Main extends Scene {
             .times(Mat4.translation(0, 0, BASE_HEIGHT/2 + SHAFT_HEIGHT)) // Move to top of shaft
             .times(Mat4.scale(SHAFT_RADIUS, SHAFT_RADIUS, SHAFT_RADIUS));
         this.shapes.sphere.draw(context, program_state, head_transform, this.materials.test);
+    }
+
+    drawTable(context, program_state, model_transform) {
+
+        // Draw table
+        this.shapes.table.draw(context, program_state, model_transform, this.materials.test2);
+
+        // Draw rails
+        model_transform = Mat4.identity();
+        const RAIL_HEIGHT = config.RAIL_HEIGHT;
+        const RAIL_WIDTH = config.RAIL_WIDTH;
+        // Upper rail
+        let upper_rail_transform = model_transform
+            .times(Mat4.translation(0, config.UPPER_BOUND + RAIL_WIDTH / 2, RAIL_HEIGHT / 2))
+            .times(Mat4.scale(config.RIGHT_BOUND + RAIL_WIDTH, RAIL_WIDTH / 2, RAIL_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, upper_rail_transform, this.materials.test);
+        // Lower rail
+        let lower_rail_transform = model_transform
+            .times(Mat4.translation(0, config.LOWER_BOUND - RAIL_WIDTH / 2, RAIL_HEIGHT / 2))
+            .times(Mat4.scale(config.RIGHT_BOUND + RAIL_WIDTH, RAIL_WIDTH / 2, RAIL_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, lower_rail_transform, this.materials.test);
+        // Left rail
+        const GOAL_SIZE = config.GOAL_SIZE;
+        const SIDE_RAIL_LENGTH = (config.UPPER_BOUND - config.LOWER_BOUND - GOAL_SIZE) / 2;
+        let upper_left_transform = model_transform
+            .times(Mat4.translation(config.LEFT_BOUND - RAIL_WIDTH / 2, config.UPPER_BOUND - SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
+            .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, upper_left_transform, this.materials.test);
+        let lower_left_transform = model_transform
+            .times(Mat4.translation(config.LEFT_BOUND - RAIL_WIDTH / 2, config.LOWER_BOUND + SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
+            .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, lower_left_transform, this.materials.test);
+        // Right rail
+        let upper_right_transform = model_transform
+            .times(Mat4.translation(config.RIGHT_BOUND + RAIL_WIDTH / 2, config.UPPER_BOUND - SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
+            .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, upper_right_transform, this.materials.test);
+        let lower_right_transform = model_transform
+            .times(Mat4.translation(config.RIGHT_BOUND + RAIL_WIDTH / 2, config.LOWER_BOUND + SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
+            .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, lower_right_transform, this.materials.test);
+
+        // Draw goal posts
+        const GOAL_POST_LENGTH = config.GOAL_POST_LENGTH;
+        const GOAL_POST_HEIGHT = config.GOAL_POST_HEIGHT;
+        const GOAL_HEIGHT = config.RAIL_HEIGHT;
+        // Left post
+        let left_goal_post = model_transform
+            .times(Mat4.translation(config.LEFT_BOUND - RAIL_WIDTH / 2, 0, GOAL_POST_HEIGHT / 2 + GOAL_HEIGHT))
+            .times(Mat4.scale(RAIL_WIDTH / 2, GOAL_POST_LENGTH / 2, GOAL_POST_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, left_goal_post, this.materials.test);
+        // Right post
+        let right_goal_post = model_transform
+            .times(Mat4.translation(config.RIGHT_BOUND + RAIL_WIDTH / 2, 0, GOAL_POST_HEIGHT / 2 + GOAL_HEIGHT))
+            .times(Mat4.scale(RAIL_WIDTH / 2, GOAL_POST_LENGTH / 2, GOAL_POST_HEIGHT / 2));
+        this.shapes.rail.draw(context, program_state, right_goal_post, this.materials.test);
     }
 }
 
