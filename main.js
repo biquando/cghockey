@@ -177,14 +177,28 @@ export class Main extends Scene {
             this.puckInsideVertWall = false;
         }
         // left wall and right wall
-        if (this.puck.position[0] + this.puck.radius > config.RIGHT_BOUND
-            || this.puck.position[0] - this.puck.radius < config.LEFT_BOUND) {
+        if ((this.puck.position[1] > (config.GOAL_SIZE / 2)
+            || this.puck.position[1] < -(config.GOAL_SIZE / 2))
+            && (this.puck.position[0] + this.puck.radius > config.RIGHT_BOUND
+            || this.puck.position[0] - this.puck.radius < config.LEFT_BOUND)) {
             if (!this.puckInsideHorizWall) { // If the puck was not inside the wall last frame
                 this.puckInsideHorizWall = true;
                 this.puck.velocity[0] = -this.puck.velocity[0];
             }
         } else {
             this.puckInsideHorizWall = false;
+        }
+
+        /*=== Goal detection =================================================*/
+        if (this.puck.position[0] < (config.LEFT_BOUND - this.puck.radius)
+            || this.puck.position[0] > (config.RIGHT_BOUND + this.puck.radius)) {
+            console.log(config.PUCK_INIT_POS[0] + "," + config.PUCK_INIT_POS[1] + "," + config.PUCK_INIT_POS[2])
+            this.puck.position = config.PUCK_INIT_POS.copy();
+            this.puck.velocity = vec3(0, 0, 0);
+            this.mallet1.position = config.MALLET1_INIT_POS.copy();
+            this.mallet2.position = config.MALLET2_INIT_POS.copy();
+
+            //TODO: Update score
         }
 
         /*=== Update moving objects ==========================================*/

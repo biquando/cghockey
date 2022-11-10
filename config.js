@@ -31,7 +31,7 @@ export const config = {
     TABLE_HEIGHT: 50,
     GOAL_SIZE: 40,
     GOAL_POST_LENGTH: 48,
-    GOAL_POST_HEIGHT: 2,
+    GOAL_POST_HEIGHT: 1,
 
     CENTER_LINE: 0,
 };
