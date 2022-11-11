@@ -40,16 +40,15 @@ export class Main extends Scene {
 
         // Initialize puck and mallets
         // Parameters: radius, mass, position
-        this.puck    = new Puck  (config.PUCK_RADIUS,       config.PUCK_MASS, config.PUCK_INIT_POS);
+        this.puck    = new Puck  (config.PUCK_RADIUS,       config.PUCK_MASS, config.PUCK_INIT_POS_P1);
         this.mallet1 = new Mallet(config.MALLET1_RADIUS, config.MALLET1_MASS, config.MALLET1_INIT_POS);
         this.mallet2 = new Mallet(config.MALLET2_RADIUS, config.MALLET2_MASS, config.MALLET2_INIT_POS);
-
-        // Initial velocity to test collision
-        this.puck.velocity = vec3(5, 0, 0);
 
         // Don't let the mallets cross the center line
         this.mallet1.rightBound = config.CENTER_LINE;
         this.mallet2.leftBound = config.CENTER_LINE;
+
+        this.scoreL = this.scoreR = 0;
     }
 
     make_control_panel() {
@@ -170,23 +169,23 @@ export class Main extends Scene {
         }
 
         /*=== Goal detection =================================================*/
+        let p1Scored = false, p2Scored = false;
         if (this.puck.position[0] < (config.LEFT_BOUND - this.puck.radius)){
-            this.scoreR=this.scoreR+1;
-            console.log("Left Score"+this.scoreR)
+            p2Scored = true;
+            this.scoreR += 1;
+            console.log("P2 Scored: "+this.scoreR)
+            this.puck.position = config.PUCK_INIT_POS_P1.copy(); // Give the puck to player 1
         }
         if(this.puck.position[0] > (config.RIGHT_BOUND + this.puck.radius)){
-            this.scoreL=this.scoreL+1;
-            console.log("Right Score"+this.scoreL)
+            p1Scored = true;
+            this.scoreL += 1;
+            console.log("P1 Scored: " + this.scoreL);
+            this.puck.position = config.PUCK_INIT_POS_P2.copy(); // Give the puck to player 2
         }
-
-        if (this.puck.position[0] < (config.LEFT_BOUND - this.puck.radius)
-            || this.puck.position[0] > (config.RIGHT_BOUND + this.puck.radius)) {
-            console.log(config.PUCK_INIT_POS[0] + "," + config.PUCK_INIT_POS[1] + "," + config.PUCK_INIT_POS[2])
-            this.puck.position = config.PUCK_INIT_POS.copy();
+        if (p1Scored || p2Scored) {
             this.puck.velocity = vec3(0, 0, 0);
             this.mallet1.position = config.MALLET1_INIT_POS.copy();
             this.mallet2.position = config.MALLET2_INIT_POS.copy();
-
         }
 
         /*=== Update moving objects ==========================================*/
