@@ -131,7 +131,7 @@ export class Main extends Scene {
         if (this.puck.position.minus(this.mallet1.position).norm() < this.mallet1.radius + this.puck.radius) {
             if (!this.puckInsideMallet1) { // If the puck was not inside mallet 1 last frame
                 this.puckInsideMallet1 = true;
-                this.puck.elastic_collision(this.mallet1);
+                this.puck.elastic_collision(this.mallet1) * config.PUCK_ELASTICITY;
             }
         } else {
             this.puckInsideMallet1 = false;
@@ -140,7 +140,7 @@ export class Main extends Scene {
         if (this.puck.position.minus(this.mallet2.position).norm() < this.mallet2.radius + this.puck.radius) {
             if (!this.puckInsideMallet2) { // If the puck was not inside mallet 2 last frame
                 this.puckInsideMallet2 = true;
-                this.puck.elastic_collision(this.mallet2);
+                this.puck.elastic_collision(this.mallet2) * config.PUCK_ELASTICITY;
             }
         } else {
             this.puckInsideMallet2 = false;
@@ -150,7 +150,7 @@ export class Main extends Scene {
             || this.puck.position[1] - this.puck.radius < config.LOWER_BOUND) {
             if (!this.puckInsideVertWall) { // If the puck was not inside the wall last frame
                 this.puckInsideVertWall = true;
-                this.puck.velocity[1] = -this.puck.velocity[1];
+                this.puck.velocity[1] = -this.puck.velocity[1] * config.PUCK_ELASTICITY;
             }
         } else {
             this.puckInsideVertWall = false;
@@ -162,7 +162,7 @@ export class Main extends Scene {
             || this.puck.position[0] - this.puck.radius < config.LEFT_BOUND)) {
             if (!this.puckInsideHorizWall) { // If the puck was not inside the wall last frame
                 this.puckInsideHorizWall = true;
-                this.puck.velocity[0] = -this.puck.velocity[0];
+                this.puck.velocity[0] = -this.puck.velocity[0] * config.PUCK_ELASTICITY;
             }
         } else {
             this.puckInsideHorizWall = false;
@@ -173,7 +173,7 @@ export class Main extends Scene {
         if (this.puck.position[0] < (config.LEFT_BOUND - this.puck.radius)){
             p2Scored = true;
             this.scoreR += 1;
-            console.log("P2 Scored: "+this.scoreR)
+            console.log("P2 Scored: " + this.scoreR)
             this.puck.position = config.PUCK_INIT_POS_P1.copy(); // Give the puck to player 1
         }
         if(this.puck.position[0] > (config.RIGHT_BOUND + this.puck.radius)){
