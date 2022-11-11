@@ -53,19 +53,24 @@ export class Mallet extends MovableObject {
     }
 
     update(delta_time) {
-        // Update velocity based on user input
-        this.velocity = Vector3.create(0, 0, 0);
+        // Update acceleration based on user input
+        this.acceleration = this.velocity.times(-20);
         if (this.movingUp) {
-            this.velocity[1] += config.MALLET_SPEED;
+            this.acceleration[1] = config.MALLET_ACCELERATION;
         }
         if (this.movingDown) {
-            this.velocity[1] -= config.MALLET_SPEED;
+            this.acceleration[1] = -config.MALLET_ACCELERATION;
         }
         if (this.movingLeft) {
-            this.velocity[0] -= config.MALLET_SPEED;
+            this.acceleration[0] = -config.MALLET_ACCELERATION;
         }
         if (this.movingRight) {
-            this.velocity[0] += config.MALLET_SPEED;
+            this.acceleration[0] = config.MALLET_ACCELERATION;
+        }
+
+        // Limit velocity
+        if (this.velocity.norm() > config.MALLET_SPEED) {
+            this.velocity = this.velocity.normalized().times(config.MALLET_SPEED);
         }
 
         // Don't let the mallet cross specific left/right bounds
