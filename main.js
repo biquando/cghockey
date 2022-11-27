@@ -154,7 +154,8 @@ export class Main extends Scene {
                 this.puck.calculateSpin(
                     this.puck.velocity,
                     this.puck.position[1] > 0 ? vec3(0, 1, 0) : vec3(0, -1, 0),
-                    Math.abs(this.puck.velocity[1] * 2));
+                    Math.abs(this.puck.velocity[1] * 2),
+                    false);
                 this.puck.velocity[1] = -this.puck.velocity[1] * config.PUCK_ELASTICITY;
             }
         } else {
@@ -170,7 +171,8 @@ export class Main extends Scene {
                 this.puck.calculateSpin(
                     this.puck.velocity,
                     this.puck.position[0] > 0 ? vec3(1, 0, 0) : vec3(-1, 0, 0),
-                    Math.abs(this.puck.velocity[0] * 2));
+                    Math.abs(this.puck.velocity[0] * 2),
+                    false);
                 this.puck.velocity[0] = -this.puck.velocity[0] * config.PUCK_ELASTICITY;
             }
         } else {

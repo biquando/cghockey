@@ -22,6 +22,7 @@ export const config = {
 
     SPIN_CONSTANT: 0.001,
     MAX_SPIN: 10,
+    MAX_SPIN_TRAJECTORY_ANGLE: Math.PI/16,
 
     MALLET_SPEED: 130,
     MALLET_ACCELERATION: 2000,
