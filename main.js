@@ -21,6 +21,7 @@ export class Main extends Scene {
             sphere: new defs.Subdivision_Sphere(4),
             cylinder: new defs.Capped_Cylinder(100,100),
             puck: new defs.Rounded_Capped_Cylinder(100,100),
+            cube: new defs.Cube(),
             table: new defs.Cube(),
             rail: new defs.Cube(),
         };
@@ -104,7 +105,7 @@ export class Main extends Scene {
         // Draw puck
         model_transform = model_transform
             .times(Mat4.translation(this.puck.position[0], this.puck.position[1], this.puck.position[2]));
-        this.drawPuck(context, program_state, model_transform, this.puck.radius);
+        this.drawPuck(context, program_state, model_transform, this.puck.radius, this.puck.angle);
         model_transform = Mat4.identity();
 
         // Draw mallet 1
@@ -131,7 +132,7 @@ export class Main extends Scene {
         if (this.puck.position.minus(this.mallet1.position).norm() < this.mallet1.radius + this.puck.radius) {
             if (!this.puckInsideMallet1) { // If the puck was not inside mallet 1 last frame
                 this.puckInsideMallet1 = true;
-                this.puck.elastic_collision(this.mallet1) * config.PUCK_ELASTICITY;
+                this.puck.elastic_collision(this.mallet1);
             }
         } else {
             this.puckInsideMallet1 = false;
@@ -140,7 +141,7 @@ export class Main extends Scene {
         if (this.puck.position.minus(this.mallet2.position).norm() < this.mallet2.radius + this.puck.radius) {
             if (!this.puckInsideMallet2) { // If the puck was not inside mallet 2 last frame
                 this.puckInsideMallet2 = true;
-                this.puck.elastic_collision(this.mallet2) * config.PUCK_ELASTICITY;
+                this.puck.elastic_collision(this.mallet2);
             }
         } else {
             this.puckInsideMallet2 = false;
@@ -150,6 +151,10 @@ export class Main extends Scene {
             || this.puck.position[1] - this.puck.radius < config.LOWER_BOUND) {
             if (!this.puckInsideVertWall) { // If the puck was not inside the wall last frame
                 this.puckInsideVertWall = true;
+                this.puck.calculateSpin(
+                    this.puck.velocity,
+                    this.puck.position[1] > 0 ? vec3(0, 1, 0) : vec3(0, -1, 0),
+                    Math.abs(this.puck.velocity[1] * 2));
                 this.puck.velocity[1] = -this.puck.velocity[1] * config.PUCK_ELASTICITY;
             }
         } else {
@@ -162,6 +167,10 @@ export class Main extends Scene {
             || this.puck.position[0] - this.puck.radius < config.LEFT_BOUND)) {
             if (!this.puckInsideHorizWall) { // If the puck was not inside the wall last frame
                 this.puckInsideHorizWall = true;
+                this.puck.calculateSpin(
+                    this.puck.velocity,
+                    this.puck.position[0] > 0 ? vec3(1, 0, 0) : vec3(-1, 0, 0),
+                    Math.abs(this.puck.velocity[0] * 2));
                 this.puck.velocity[0] = -this.puck.velocity[0] * config.PUCK_ELASTICITY;
             }
         } else {
@@ -184,6 +193,8 @@ export class Main extends Scene {
         }
         if (p1Scored || p2Scored) {
             this.puck.velocity = vec3(0, 0, 0);
+            this.puck.angle = 0;
+            this.puck.spin = 0;
             this.mallet1.position = config.MALLET1_INIT_POS.copy();
             this.mallet2.position = config.MALLET2_INIT_POS.copy();
         }
@@ -194,14 +205,24 @@ export class Main extends Scene {
         this.puck.update(dt);
     }
 
-    drawPuck(context, program_state, model_transform, radius) {
+    drawPuck(context, program_state, model_transform, radius, angle) {
         const PUCK_RADIUS = radius, PUCK_HEIGHT = 1;
         const Z_OFFSET = PUCK_HEIGHT / 2; // Offset so the puck's bottom is at the origin
                                           // This makes it easier to position the puck on the table
-        model_transform = model_transform
+        const puck_transform = model_transform
             .times(Mat4.translation(0, 0, Z_OFFSET))
+            .times(Mat4.rotation(angle, 0, 0, 1))
             .times(Mat4.scale(PUCK_RADIUS, PUCK_RADIUS, PUCK_HEIGHT));
-        this.shapes.puck.draw(context, program_state, model_transform, this.materials.test);
+        this.shapes.puck.draw(context, program_state, puck_transform, this.materials.test);
+
+        // Draw bar on top (to see the puck's spin)
+        const BAR_LENGTH = PUCK_RADIUS * 0.9, BAR_WIDTH = BAR_LENGTH * 0.2;
+        const bar_transform = model_transform
+            .times(Mat4.translation(0, 0, Z_OFFSET))
+            .times(Mat4.rotation(angle, 0, 0, 1))
+            .times(Mat4.scale(BAR_LENGTH, BAR_WIDTH, BAR_WIDTH));
+        this.shapes.cube.draw(context, program_state, bar_transform,
+            this.materials.test.override({ambient: 1, color: hex_color("#00FF00")}));
     }
 
     drawMallet(context, program_state, model_transform, radius) {

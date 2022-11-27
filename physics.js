@@ -24,6 +24,8 @@ export class Puck extends MovableObject {
     constructor(radius, ...args) {
         super(...args);
         this.radius = radius;
+        this.angle = 0; // radians
+        this.spin = 0;  // angular frequency
     }
 
     // Using the formula from https://en.wikipedia.org/wiki/Elastic_collision
@@ -35,10 +37,29 @@ export class Puck extends MovableObject {
         const x1 = this.position;
         const x2 = other.position;
 
+        // Calculate new velocity
         const v1_prime = v1.minus(x1.minus(x2).times(2 * m2 / (m1 + m2)
             * v1.minus(v2).dot(x1.minus(x2)) / x1.minus(x2).norm()**2));
 
+        const deltaV = v1_prime.minus(this.velocity);
+        this.calculateSpin(v1.minus(v2), x2.minus(x1), deltaV.norm());
+
         this.velocity = v1_prime;
+    }
+
+    calculateSpin(relVelocity, collisionVec, deltaSpeed) {
+        const spinVec = relVelocity.cross(collisionVec.normalized());
+        let deltaSpin = spinVec.norm() * deltaSpeed;
+        if (spinVec[2] < 0) {  // spin clockwise
+            deltaSpin *= -1;
+        }
+        deltaSpin *= config.SPIN_CONSTANT;
+        this.spin = Math.max(Math.min(this.spin + deltaSpin, config.MAX_SPIN), -config.MAX_SPIN);
+    }
+
+    update(delta_time) {
+        this.angle += this.spin * delta_time;
+        super.update(delta_time);
     }
 }
 

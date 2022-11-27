@@ -20,6 +20,9 @@ export const config = {
 
     PUCK_ELASTICITY: 0.75,
 
+    SPIN_CONSTANT: 0.001,
+    MAX_SPIN: 10,
+
     MALLET_SPEED: 130,
     MALLET_ACCELERATION: 2000,
 
