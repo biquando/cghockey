@@ -5,6 +5,7 @@ const {
 } = tiny;
 
 export const config = {
+    PUCK_INIT_POS: Vector3.create(0, 0, 0),
     PUCK_INIT_POS_P1: Vector3.create(-50, 0, 0),
     PUCK_INIT_POS_P2: Vector3.create(50, 0, 0),
     MALLET1_INIT_POS: Vector3.create(-100, 0, 0),

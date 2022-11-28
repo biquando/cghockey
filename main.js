@@ -41,7 +41,7 @@ export class Main extends Scene {
 
         // Initialize puck and mallets
         // Parameters: radius, mass, position
-        this.puck    = new Puck  (config.PUCK_RADIUS,       config.PUCK_MASS, config.PUCK_INIT_POS_P1);
+        this.puck    = new Puck  (config.PUCK_RADIUS,       config.PUCK_MASS, config.PUCK_INIT_POS);
         this.mallet1 = new Mallet(config.MALLET1_RADIUS, config.MALLET1_MASS, config.MALLET1_INIT_POS);
         this.mallet2 = new Mallet(config.MALLET2_RADIUS, config.MALLET2_MASS, config.MALLET2_INIT_POS);
 
@@ -49,6 +49,16 @@ export class Main extends Scene {
         this.mallet1.rightBound = config.CENTER_LINE;
         this.mallet2.leftBound = config.CENTER_LINE;
 
+        this.scoreL = this.scoreR = 0;
+    }
+
+    reset() {
+        this.puck.position = config.PUCK_INIT_POS;
+        this.puck.velocity = vec3(0, 0, 0);
+        this.puck.angle = 0;
+        this.puck.spin = 0;
+        this.mallet1.position = config.MALLET1_INIT_POS.copy();
+        this.mallet2.position = config.MALLET2_INIT_POS.copy();
         this.scoreL = this.scoreR = 0;
     }
 
@@ -76,6 +86,9 @@ export class Main extends Scene {
             BUTTON_COLOR, () => {this.mallet2.movingDown = false;});
         this.key_triggered_button("P2 Right", ["ArrowRight"], () => {this.mallet2.movingRight = true;},
             BUTTON_COLOR, () => {this.mallet2.movingRight = false});
+        this.new_line();
+        this.new_line();
+        this.key_triggered_button("Reset", ["x"], () => {this.reset();});
     }
 
     display(context, program_state) {
@@ -184,13 +197,13 @@ export class Main extends Scene {
         if (this.puck.position[0] < (config.LEFT_BOUND - this.puck.radius)){
             p2Scored = true;
             this.scoreR += 1;
-            console.log("P2 Scored: " + this.scoreR)
+            console.log("P1 Scored: " + this.scoreL + " " + "P2 Scored: " + this.scoreR)
             this.puck.position = config.PUCK_INIT_POS_P1.copy(); // Give the puck to player 1
         }
         if(this.puck.position[0] > (config.RIGHT_BOUND + this.puck.radius)){
             p1Scored = true;
             this.scoreL += 1;
-            console.log("P1 Scored: " + this.scoreL);
+            console.log("P1 Scored: " + this.scoreL + " " + "P2 Scored: " + this.scoreR);
             this.puck.position = config.PUCK_INIT_POS_P2.copy(); // Give the puck to player 2
         }
         if (p1Scored || p2Scored) {
