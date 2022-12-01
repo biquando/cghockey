@@ -1,8 +1,12 @@
 import {defs, tiny} from './examples/common.js';
 
 const {
-        vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Material, Scene,
+        vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Material, Scene, Texture
 } = tiny;
+
+const {
+    Textured_Phong,
+} = defs;
 
 import {Puck, Mallet} from './physics.js';
 import {config} from './config.js';
@@ -26,12 +30,22 @@ export class Main extends Scene {
             rail: new defs.Cube(),
         };
 
+        for (let i = 0; i < this.shapes.table.arrays.texture_coord.length; i++) {
+            this.shapes.table.arrays.texture_coord[i][1] *= config.UPPER_BOUND/config.RIGHT_BOUND;
+            this.shapes.table.arrays.texture_coord[i][1] += 0.258;
+        }
+
         // *** Materials
         this.materials = {
             test: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#ffffff")}),
             test2: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
+            table: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 0.8, specularity: 0.3,
+                texture: new Texture("assets/table.png", "LINEAR_MIPMAP_LINEAR")
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, -5, 200), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -269,7 +283,7 @@ export class Main extends Scene {
     drawTable(context, program_state, model_transform) {
 
         // Draw table
-        this.shapes.table.draw(context, program_state, model_transform, this.materials.test2);
+        this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
 
         // Draw rails
         model_transform = Mat4.identity();
