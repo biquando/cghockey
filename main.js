@@ -119,7 +119,7 @@ export class Main extends Scene {
     }
 
     reset() {
-        this.puck.position = config.PUCK_INIT_POS;
+        this.puck.position = config.PUCK_INIT_POS.copy();
         this.puck.velocity = vec3(0, 0, 0);
         this.puck.angle = 0;
         this.puck.spin = 0;
