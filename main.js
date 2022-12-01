@@ -28,11 +28,18 @@ export class Main extends Scene {
             cube: new defs.Cube(),
             table: new defs.Cube(),
             rail: new defs.Cube(),
+            floor: new defs.Cube(),
         };
 
+        // Scale the table texture to fit the table
         for (let i = 0; i < this.shapes.table.arrays.texture_coord.length; i++) {
             this.shapes.table.arrays.texture_coord[i][1] *= config.UPPER_BOUND/config.RIGHT_BOUND;
             this.shapes.table.arrays.texture_coord[i][1] += 0.258;
+        }
+        // Scale the floor texture to be smaller
+        for (let i = 0; i < this.shapes.floor.arrays.texture_coord.length; i++) {
+            this.shapes.floor.arrays.texture_coord[i][0] *= 4;
+            this.shapes.floor.arrays.texture_coord[i][1] *= 4;
         }
 
         // *** Materials
@@ -45,6 +52,11 @@ export class Main extends Scene {
                 color: hex_color("#000000"),
                 ambient: 0.8, specularity: 0.3,
                 texture: new Texture("assets/table.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            floor: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/floor.png", "LINEAR_MIPMAP_LINEAR")
             }),
         }
 
@@ -153,6 +165,12 @@ export class Main extends Scene {
             .times(Mat4.scale(config.RIGHT_BOUND + config.RAIL_WIDTH, config.UPPER_BOUND + config.RAIL_WIDTH, config.TABLE_HEIGHT / 2));
         this.drawTable(context, program_state, model_transform);
         model_transform = Mat4.identity();
+
+        // Draw floor
+        model_transform = model_transform
+            .times(Mat4.translation(0, 0, -config.TABLE_HEIGHT))
+            .times(Mat4.scale(256, 256, 1));
+        this.shapes.floor.draw(context, program_state, model_transform, this.materials.floor);
 
         /*=== Collision detection (this only affects the puck) ===============*/
         // puck and mallet1
