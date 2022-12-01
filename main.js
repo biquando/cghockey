@@ -1,7 +1,7 @@
 import {defs, tiny} from './examples/common.js';
 
 const {
-        vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Material, Scene, Texture
+        vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Material, Scene, Texture, 
 } = tiny;
 
 const {
@@ -44,8 +44,11 @@ export class Main extends Scene {
 
         // *** Materials
         this.materials = {
-            test: new Material(new Gouraud_Shader(),
-                {ambient: .4, diffusivity: .6, color: hex_color("#ffffff")}),
+            test: new Material(new Gouraud_Shader(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 1, specularity: 1, 
+                texture: new Texture("assets/Mallet.jpg")
+            }),
             test2: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
             table: new Material(new Textured_Phong(), {
@@ -58,6 +61,15 @@ export class Main extends Scene {
                 ambient: 1,
                 texture: new Texture("assets/floor.png", "LINEAR_MIPMAP_LINEAR")
             }),
+            puck: new Material(new defs.Fake_Bump_Map(1), {
+                ambient: 1, specularity: 0.2,
+                texture: new Texture("assets/Puck.jpg")
+            }),
+            mallet: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 1, specularity: 1, 
+                texture: new Texture("assets/Mallet.jpg")
+            })
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, -5, 200), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -260,7 +272,7 @@ export class Main extends Scene {
             .times(Mat4.translation(0, 0, Z_OFFSET))
             .times(Mat4.rotation(angle, 0, 0, 1))
             .times(Mat4.scale(PUCK_RADIUS, PUCK_RADIUS, PUCK_HEIGHT));
-        this.shapes.puck.draw(context, program_state, puck_transform, this.materials.test);
+        this.shapes.puck.draw(context, program_state, puck_transform, this.materials.puck);
 
         // Draw bar on top (to see the puck's spin)
         const BAR_LENGTH = PUCK_RADIUS * 0.9, BAR_WIDTH = BAR_LENGTH * 0.2;
@@ -280,7 +292,7 @@ export class Main extends Scene {
         let base_transform = model_transform
             .times(Mat4.translation(0, 0, Z_OFFSET))
             .times(Mat4.scale(BASE_RADIUS, BASE_RADIUS, BASE_HEIGHT));
-        this.shapes.cylinder.draw(context, program_state, base_transform, this.materials.test);
+        this.shapes.cylinder.draw(context, program_state, base_transform, this.materials.mallet);
 
         // Draw stick shaft
         const SHAFT_RADIUS = BASE_RADIUS / 2, SHAFT_HEIGHT = 4;
@@ -288,14 +300,14 @@ export class Main extends Scene {
             .times(Mat4.translation(0, 0, Z_OFFSET))
             .times(Mat4.translation(0, 0, BASE_HEIGHT/2 + SHAFT_HEIGHT/2)) // Move to top of base
             .times(Mat4.scale(SHAFT_RADIUS, SHAFT_RADIUS, SHAFT_HEIGHT));
-        this.shapes.cylinder.draw(context, program_state, shaft_transform, this.materials.test);
+        this.shapes.cylinder.draw(context, program_state, shaft_transform, this.materials.mallet);
 
         // Draw stick head
         let head_transform = model_transform
             .times(Mat4.translation(0, 0, Z_OFFSET))
             .times(Mat4.translation(0, 0, BASE_HEIGHT/2 + SHAFT_HEIGHT)) // Move to top of shaft
             .times(Mat4.scale(SHAFT_RADIUS, SHAFT_RADIUS, SHAFT_RADIUS));
-        this.shapes.sphere.draw(context, program_state, head_transform, this.materials.test);
+        this.shapes.sphere.draw(context, program_state, head_transform, this.materials.mallet);
     }
 
     drawTable(context, program_state, model_transform) {
