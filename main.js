@@ -58,6 +58,46 @@ export class Main extends Scene {
                 ambient: 1,
                 texture: new Texture("assets/floor.png", "LINEAR_MIPMAP_LINEAR")
             }),
+            zero: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/0.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            one: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/1.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            two: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/2.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            three: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/3.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            four: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/4.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            five: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/5.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            six: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/6.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            seven: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/7.png", "LINEAR_MIPMAP_LINEAR")
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, -5, 200), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -171,6 +211,12 @@ export class Main extends Scene {
             .times(Mat4.translation(0, 0, -config.TABLE_HEIGHT))
             .times(Mat4.scale(256, 256, 1));
         this.shapes.floor.draw(context, program_state, model_transform, this.materials.floor);
+        model_transform = Mat4.identity();
+
+        model_transform = model_transform
+            .times(Mat4.scale(10, 10, 1))
+            .times(Mat4.translation(75,  0, -config.TABLE_HEIGHT-2));
+        this.shapes.floor.draw(context, program_state, model_transform, this.materials.zero);
 
         /*=== Collision detection (this only affects the puck) ===============*/
         // puck and mallet1
