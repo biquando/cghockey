@@ -187,9 +187,12 @@ export class Main extends Scene {
             Math.PI / 4, context.width / context.height, .1, 1000);
 
         // Lighting
-        const light_position = vec4(0, 5, 5, 1);
+        const light1_position = vec4(0, 0, -5, 0);
+        const light2_position = vec4(0, 0, 5, 1);
         // The parameters of the Light are: position, color, size
-        program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
+        program_state.lights = [new Light(light1_position, color(1, 1, 1, 1), 1000), 
+                                new Light(light2_position, color(1, 1, 1, 1), 1000),
+                                ];
 
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.identity();
