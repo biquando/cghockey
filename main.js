@@ -65,7 +65,12 @@ export class Main extends Scene {
                 ambient: 1, specularity: 0.2,
                 texture: new Texture("assets/Puck.jpg")
             }),
-            mallet: new Material(new Textured_Phong(), {
+            mallet: new Material(new defs.Fake_Bump_Map(1), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 1, specularity: 1, 
+                texture: new Texture("assets/Mallet.jpg")
+            }),
+            rail: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 1, specularity: 1, 
                 texture: new Texture("assets/Mallet.jpg")
@@ -369,32 +374,32 @@ export class Main extends Scene {
         let upper_rail_transform = model_transform
             .times(Mat4.translation(0, config.UPPER_BOUND + RAIL_WIDTH / 2, RAIL_HEIGHT / 2))
             .times(Mat4.scale(config.RIGHT_BOUND + RAIL_WIDTH, RAIL_WIDTH / 2, RAIL_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, upper_rail_transform, this.materials.test);
+        this.shapes.rail.draw(context, program_state, upper_rail_transform, this.materials.rail);
         // Lower rail
         let lower_rail_transform = model_transform
             .times(Mat4.translation(0, config.LOWER_BOUND - RAIL_WIDTH / 2, RAIL_HEIGHT / 2))
             .times(Mat4.scale(config.RIGHT_BOUND + RAIL_WIDTH, RAIL_WIDTH / 2, RAIL_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, lower_rail_transform, this.materials.test);
+        this.shapes.rail.draw(context, program_state, lower_rail_transform, this.materials.rail);
         // Left rail
         const GOAL_SIZE = config.GOAL_SIZE;
         const SIDE_RAIL_LENGTH = (config.UPPER_BOUND - config.LOWER_BOUND - GOAL_SIZE) / 2;
         let upper_left_transform = model_transform
             .times(Mat4.translation(config.LEFT_BOUND - RAIL_WIDTH / 2, config.UPPER_BOUND - SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
             .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, upper_left_transform, this.materials.test);
+        this.shapes.rail.draw(context, program_state, upper_left_transform, this.materials.rail);
         let lower_left_transform = model_transform
             .times(Mat4.translation(config.LEFT_BOUND - RAIL_WIDTH / 2, config.LOWER_BOUND + SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
             .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, lower_left_transform, this.materials.test);
+        this.shapes.rail.draw(context, program_state, lower_left_transform, this.materials.rail);
         // Right rail
         let upper_right_transform = model_transform
             .times(Mat4.translation(config.RIGHT_BOUND + RAIL_WIDTH / 2, config.UPPER_BOUND - SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
             .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, upper_right_transform, this.materials.test);
+        this.shapes.rail.draw(context, program_state, upper_right_transform, this.materials.rail);
         let lower_right_transform = model_transform
             .times(Mat4.translation(config.RIGHT_BOUND + RAIL_WIDTH / 2, config.LOWER_BOUND + SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2))
             .times(Mat4.scale(RAIL_WIDTH / 2, SIDE_RAIL_LENGTH / 2, RAIL_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, lower_right_transform, this.materials.test);
+        this.shapes.rail.draw(context, program_state, lower_right_transform, this.materials.rail);
 
         // Draw goal posts
         const GOAL_POST_LENGTH = config.GOAL_POST_LENGTH;
@@ -404,12 +409,12 @@ export class Main extends Scene {
         let left_goal_post = model_transform
             .times(Mat4.translation(config.LEFT_BOUND - RAIL_WIDTH / 2, 0, GOAL_POST_HEIGHT / 2 + GOAL_HEIGHT))
             .times(Mat4.scale(RAIL_WIDTH / 2, GOAL_POST_LENGTH / 2, GOAL_POST_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, left_goal_post, this.materials.test);
+        this.shapes.rail.draw(context, program_state, left_goal_post, this.materials.rail);
         // Right post
         let right_goal_post = model_transform
             .times(Mat4.translation(config.RIGHT_BOUND + RAIL_WIDTH / 2, 0, GOAL_POST_HEIGHT / 2 + GOAL_HEIGHT))
             .times(Mat4.scale(RAIL_WIDTH / 2, GOAL_POST_LENGTH / 2, GOAL_POST_HEIGHT / 2));
-        this.shapes.rail.draw(context, program_state, right_goal_post, this.materials.test);
+        this.shapes.rail.draw(context, program_state, right_goal_post, this.materials.rail);
     }
 }
 
