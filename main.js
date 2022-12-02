@@ -327,7 +327,7 @@ export class Main extends Scene {
             .times(Mat4.rotation(angle, 0, 0, 1))
             .times(Mat4.scale(BAR_LENGTH, BAR_WIDTH, BAR_WIDTH));
         this.shapes.cube.draw(context, program_state, bar_transform,
-            this.materials.test.override({ambient: 1, color: hex_color("#00FF00")}));
+            this.materials.test.override({ambient: 1, color: hex_color("#600000")}));
     }
 
     drawMallet(context, program_state, model_transform, radius) {
