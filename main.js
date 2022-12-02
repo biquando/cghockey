@@ -77,42 +77,42 @@ export class Main extends Scene {
             }),
             zero: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/0.png", "LINEAR_MIPMAP_LINEAR")
             }),
             one: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/1.png", "LINEAR_MIPMAP_LINEAR")
             }),
             two: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/2.png", "LINEAR_MIPMAP_LINEAR")
             }),
             three: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/3.png", "LINEAR_MIPMAP_LINEAR")
             }),
             four: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/4.png", "LINEAR_MIPMAP_LINEAR")
             }),
             five: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/5.png", "LINEAR_MIPMAP_LINEAR")
             }),
             six: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/6.png", "LINEAR_MIPMAP_LINEAR")
             }),
             seven: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/7.png", "LINEAR_MIPMAP_LINEAR")
             }),
         }
@@ -230,10 +230,69 @@ export class Main extends Scene {
         this.shapes.floor.draw(context, program_state, model_transform, this.materials.floor);
         model_transform = Mat4.identity();
 
+        //determine numbers printed
+        let player1Score=this.materials.zero;
+        switch(this.scoreL){
+            case 1:
+                player1Score=this.materials.one;
+                break;
+            case 2:
+                player1Score=this.materials.two;
+                break;
+            case 3:
+                player1Score=this.materials.three;
+                break;
+            case 4:
+                player1Score=this.materials.four;
+                break;
+            case 5:
+                player1Score=this.materials.five;
+                break;
+            case 6:
+                player1Score=this.materials.six;
+                break;
+            case 7:
+                this.reset();
+                break;
+        }
+
+        //print score
         model_transform = model_transform
-            .times(Mat4.scale(10, 10, 1))
-            .times(Mat4.translation(75,  0, -config.TABLE_HEIGHT-2));
-        this.shapes.floor.draw(context, program_state, model_transform, this.materials.zero);
+            .times(Mat4.translation(-70, 0, -0.95))
+            .times(Mat4.scale(10, 10, 1));
+        this.shapes.cube.draw(context, program_state, model_transform, player1Score);
+        model_transform = Mat4.identity();
+
+        let player2Score=this.materials.zero;
+        switch(this.scoreR){
+            case 1:
+                player2Score=this.materials.one;
+                break;
+            case 2:
+                player2Score=this.materials.two;
+                break;
+            case 3:
+                player2Score=this.materials.three;
+                break;
+            case 4:
+                player2Score=this.materials.four;
+                break;
+            case 5:
+                player2Score=this.materials.five;
+                break;
+            case 6:
+                player2Score=this.materials.six;
+                break;
+            case 7:
+               this.reset();
+                break;
+        }
+
+        model_transform = model_transform
+            .times(Mat4.translation(70, 0, -0.95))
+            .times(Mat4.scale(10, 10, 1));
+        this.shapes.cube.draw(context, program_state, model_transform, player2Score);
+        model_transform = Mat4.identity();
 
         /*=== Collision detection (this only affects the puck) ===============*/
         // puck and mallet1
@@ -332,7 +391,7 @@ export class Main extends Scene {
             .times(Mat4.rotation(angle, 0, 0, 1))
             .times(Mat4.scale(BAR_LENGTH, BAR_WIDTH, BAR_WIDTH));
         this.shapes.cube.draw(context, program_state, bar_transform,
-            this.materials.test.override({ambient: 1, color: hex_color("#00FF00")}));
+            this.materials.test.override({ambient: 1, color: hex_color("#600000")}));
     }
 
     drawMallet(context, program_state, model_transform, radius) {
