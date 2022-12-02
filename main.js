@@ -225,10 +225,69 @@ export class Main extends Scene {
         this.shapes.floor.draw(context, program_state, model_transform, this.materials.floor);
         model_transform = Mat4.identity();
 
+        //determine numbers printed
+        let player1Score=this.materials.zero;
+        switch(this.scoreL){
+            case 1:
+                player1Score=this.materials.one;
+                break;
+            case 2:
+                player1Score=this.materials.two;
+                break;
+            case 3:
+                player1Score=this.materials.three;
+                break;
+            case 4:
+                player1Score=this.materials.four;
+                break;
+            case 5:
+                player1Score=this.materials.five;
+                break;
+            case 6:
+                player1Score=this.materials.six;
+                break;
+            case 7:
+                player1Score=this.materials.seven;
+                break;
+        }
+
+        //print score
         model_transform = model_transform
-            .times(Mat4.scale(10, 10, 1))
-            .times(Mat4.translation(75,  0, -config.TABLE_HEIGHT-2));
-        this.shapes.floor.draw(context, program_state, model_transform, this.materials.zero);
+            .times(Mat4.translation(-70, 0, -0.95))
+            .times(Mat4.scale(10, 10, 1));
+        this.shapes.cube.draw(context, program_state, model_transform, player1Score);
+        model_transform = Mat4.identity();
+
+        let player2Score=this.materials.zero;
+        switch(this.scoreR){
+            case 1:
+                player2Score=this.materials.one;
+                break;
+            case 2:
+                player2Score=this.materials.two;
+                break;
+            case 3:
+                player2Score=this.materials.three;
+                break;
+            case 4:
+                player2Score=this.materials.four;
+                break;
+            case 5:
+                player2Score=this.materials.five;
+                break;
+            case 6:
+                player2Score=this.materials.six;
+                break;
+            case 7:
+                player2Score=this.materials.seven;
+                break;
+        }
+
+        model_transform = model_transform
+            .times(Mat4.translation(70, 0, -0.95))
+            .times(Mat4.scale(10, 10, 1));
+        this.shapes.cube.draw(context, program_state, model_transform, player2Score);
+        model_transform = Mat4.identity();
 
         /*=== Collision detection (this only affects the puck) ===============*/
         // puck and mallet1
