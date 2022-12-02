@@ -247,7 +247,7 @@ export class Main extends Scene {
                 player1Score=this.materials.six;
                 break;
             case 7:
-                player1Score=this.materials.seven;
+                this.reset();
                 break;
         }
 
@@ -279,7 +279,7 @@ export class Main extends Scene {
                 player2Score=this.materials.six;
                 break;
             case 7:
-                player2Score=this.materials.seven;
+               this.reset();
                 break;
         }
 
