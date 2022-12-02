@@ -72,42 +72,42 @@ export class Main extends Scene {
             }),
             zero: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/0.png", "LINEAR_MIPMAP_LINEAR")
             }),
             one: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/1.png", "LINEAR_MIPMAP_LINEAR")
             }),
             two: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/2.png", "LINEAR_MIPMAP_LINEAR")
             }),
             three: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/3.png", "LINEAR_MIPMAP_LINEAR")
             }),
             four: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/4.png", "LINEAR_MIPMAP_LINEAR")
             }),
             five: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/5.png", "LINEAR_MIPMAP_LINEAR")
             }),
             six: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/6.png", "LINEAR_MIPMAP_LINEAR")
             }),
             seven: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
-                ambient: 1,
+                ambient: .77,
                 texture: new Texture("assets/7.png", "LINEAR_MIPMAP_LINEAR")
             }),
         }
