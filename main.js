@@ -119,6 +119,12 @@ export class Main extends Scene {
 
         this.initial_camera_location = Mat4.look_at(vec3(0, -5, 200), vec3(0, 0, 0), vec3(0, 1, 0));
 
+        // Bgm and sound effects
+        this.bgm_flag = false;
+        this.bgm = new Audio("assets/Seatbelts - Bad Dog No Biscuits.mp3");
+        this.winRound = new Audio("assets/WinRound.mp3");
+        this.winGame = new Audio("assets/GameWin.mp3");
+
 
         /*=== OUR CODE STARTS HERE ===========================================*/
 
@@ -172,6 +178,7 @@ export class Main extends Scene {
         this.new_line();
         this.new_line();
         this.key_triggered_button("Reset", ["x"], () => {this.reset();});
+        this.key_triggered_button("Play BGM", ["b"], () => {this.playMusic();});
     }
 
     display(context, program_state) {
@@ -256,6 +263,7 @@ export class Main extends Scene {
                 break;
             case 7:
                 this.reset();
+                this.winGame.play();
                 break;
         }
 
@@ -287,7 +295,8 @@ export class Main extends Scene {
                 player2Score=this.materials.six;
                 break;
             case 7:
-               this.reset();
+                this.reset();
+                this.winGame.play();
                 break;
         }
 
@@ -364,6 +373,7 @@ export class Main extends Scene {
             this.puck.position = config.PUCK_INIT_POS_P2.copy(); // Give the puck to player 2
         }
         if (p1Scored || p2Scored) {
+            this.playSound(this.winRound);
             this.puck.velocity = vec3(0, 0, 0);
             this.puck.angle = 0;
             this.puck.spin = 0;
@@ -477,6 +487,20 @@ export class Main extends Scene {
             .times(Mat4.translation(config.RIGHT_BOUND + RAIL_WIDTH / 2, 0, GOAL_POST_HEIGHT / 2 + GOAL_HEIGHT))
             .times(Mat4.scale(RAIL_WIDTH / 2, GOAL_POST_LENGTH / 2, GOAL_POST_HEIGHT / 2));
         this.shapes.rail.draw(context, program_state, right_goal_post, this.materials.rail);
+    }
+
+    playMusic() {
+        this.bgm_flag ^= true;
+        if (this.bgm_flag) {
+            this.bgm.play();
+        }
+        else {
+            this.bgm.pause();
+        }
+    }
+
+    playSound(sound) {
+        sound.play();
     }
 }
 
